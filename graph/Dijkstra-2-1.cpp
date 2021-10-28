@@ -17,17 +17,7 @@ private:
     int path[50];
 
 public:
-    Graph()
-    {
-        for (int i = 0; i < V; i++)
-            path[i] = 0;
-
-        for (int i = 0; i < V; i++)
-        {
-            for (int j = 0; j < V; j++)
-                dist[i][j] = 0;
-        }
-    }
+    Graph() {}
     void add(int v, int w, int d)
     {
         visited[v] = false;
