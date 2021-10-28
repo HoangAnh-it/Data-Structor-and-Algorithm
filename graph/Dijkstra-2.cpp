@@ -89,6 +89,18 @@ public:
     {
         return distance[v];
     }
+
+    void print_matrix()
+    {
+        for (int i = 0; i < V; i++)
+        {
+            for (int j = 0; j < V; j++)
+            {
+                cout << dist[i][j] << " ";
+            }
+            cout << endl;
+        }
+    }
 };
 int main()
 {
@@ -101,8 +113,15 @@ int main()
         cin >> a >> b >> c;
         g.add(a, b, c);
     }
-    g.dijkstra(X);
-    cout << g.getMin(Y) << endl;
-    g.trace_back(X, Y);
+
+    for (int i = 0; i < V; i++)
+    {
+        Graph _p = g;
+        _p.dijkstra(i);
+        for (int i = 0; i < V; i++)
+            cout << _p.getMin(i);
+        cout << endl;
+    }
+
     return 0;
 }
