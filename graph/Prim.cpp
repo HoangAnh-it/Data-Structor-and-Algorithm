@@ -13,7 +13,7 @@ int minKey(int key[], bool visited[])
     int min_index = 0;
     for (int i = 0; i < V; i++)
     {
-        if (!visited[i] and min_key > key[i])
+        if (!visited[i] && min_key > key[i])
         {
             min_key = key[i];
             min_index = i;
@@ -43,11 +43,13 @@ void Prim(int dist[][20])
         int u = minKey(key, visited);
         visited[u] = true;
         if (u != 0)
+        {
             path[u] = end;
+        }
         end = u;
         for (int j = 0; j < V; j++)
         {
-            if (!visited[j] and key[j] > dist[u][j] and dist[u][j] > 0)
+            if (!visited[j] && key[j] > dist[u][j] && dist[u][j] > 0)
             {
                 key[j] = dist[u][j];
             }
