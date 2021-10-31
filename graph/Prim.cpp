@@ -1,86 +1,75 @@
-#include <iostream>
-#include <vector>
-#include <map>
-#include <limits.h>
-
+#include <bits/stdc++.h>
 using namespace std;
 
-int V;
+#define V 5
 
-int minKey(int key[], bool visited[])
+int minKey(int key[], bool mstSet[])
 {
-    int min_key = INT_MAX;
-    int min_index = 0;
-    for (int i = 0; i < V; i++)
+
+    int min = INT_MAX, min_index;
+
+    for (int v = 0; v < V; v++)
     {
-        if (!visited[i] && min_key > key[i])
+        if (mstSet[v] == false && key[v] < min)
         {
-            min_key = key[i];
-            min_index = i;
+            min = key[v];
+            min_index = v;
         }
     }
 
     return min_index;
 }
 
-void Prim(int dist[][20])
+void printMST(int parent[], int graph[V][V])
 {
-    int key[20];
-    int path[20];
-    bool visited[20];
-    int end = 0;
+    cout << "Edge \tWeight\n";
+    for (int i = 1; i < V; i++)
+        cout << parent[i] << " - " << i << " \t" << graph[i][parent[i]] << " \n";
+}
+
+void primMST(int graph[V][V])
+{
+    int parent[V];
+    int key[V];
+    bool mstSet[V];
 
     for (int i = 0; i < V; i++)
     {
         key[i] = INT_MAX;
-        visited[i] = false;
-        path[i] = 0;
+        mstSet[i] = false;
     }
-    path[0] = -1;
+
     key[0] = 0;
-    for (int i = 0; i < V; i++)
+    parent[0] = -1;
+
+    for (int count = 0; count < V - 1; count++)
     {
-        int u = minKey(key, visited);
-        visited[u] = true;
-        if (u != 0)
+        int u = minKey(key, mstSet);
+        mstSet[u] = true;
+
+        for (int v = 0; v < V; v++)
         {
-            path[u] = end;
-        }
-        end = u;
-        for (int j = 0; j < V; j++)
-        {
-            if (!visited[j] && key[j] > dist[u][j] && dist[u][j] > 0)
+            if (graph[u][v] > 0 && mstSet[v] == false && graph[u][v] < key[v])
             {
-                key[j] = dist[u][j];
+                parent[v] = u;
+                key[v] = graph[u][v];
             }
         }
     }
 
-    int way[20];
-    int size = 0;
-    int cur = end;
-    while (cur != -1)
-    {
-        way[size++] = cur;
-        cur = path[cur];
-    }
-    for (int i = size - 1; i >= 0; i--)
-        cout << way[i] << " ";
-    cout << endl;
+    printMST(parent, graph);
 }
 
 int main()
 {
-    int edge;
-    cin >> V >> edge;
-    int dist[20][20];
-    for (int i = 0; i < edge; i++)
-    {
-        int a, b, c;
-        cin >> a >> b >> c;
-        dist[a][b] = c;
-        dist[b][a] = c;
-    }
-    Prim(dist);
+
+    int graph[V][V] = {{0, 2, 0, 6, 0},
+                       {2, 0, 3, 8, 5},
+                       {0, 3, 0, 0, 7},
+                       {6, 8, 0, 0, 9},
+                       {0, 5, 7, 9, 0}};
+
+    primMST(graph);
+
     return 0;
 }
