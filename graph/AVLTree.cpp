@@ -32,6 +32,15 @@ int getBalance(Node *node)
     return getHeight(node->left) - getHeight(node->right);
 }
 
+Node *minValueNode(Node *&node)
+{
+    if (node == nullptr)
+        return nullptr;
+    while (node->left != nullptr)
+        node = node->left;
+    return node;
+}
+
 Node *rightRotate(Node *y)
 {
     Node *x = y->left;
@@ -96,6 +105,70 @@ public:
         }
         return node;
     }
+
+    Node *deleteNode(Node *node, int data)
+    {
+        if (node == nullptr)
+            return nullptr;
+
+        if (node->data > data)
+            node->left = deleteNode(node->left, data);
+        else if (node->data < data)
+            node->right = deleteNode(node->right, data);
+        else
+        {
+            if (node->left == nullptr || node->right == nullptr)
+            {
+                Node *temp = node->left ? node->left : node->right;
+                if (temp == nullptr)
+                {
+                    temp = node;
+                    node = nullptr;
+                }
+                else
+                {
+                    *node = *temp;
+                }
+                delete temp;
+            }
+            else
+            {
+                Node *temp = minValueNode(node->right);
+                node->data = temp->data;
+                node->right = deleteNode(node->right, temp->data);
+            }
+        }
+
+        if (node == nullptr)
+            return nullptr;
+
+        node->height = max(getHeight(node->left), getHeight(node->right)) + 1;
+
+        int balance = getBalance(node);
+
+        if (balance > 1 && getBalance(node->left) > 1)
+        {
+            return rightRotate(node);
+        }
+
+        if (balance > 1 && getBalance(node->left) < -1)
+        {
+            node->left = leftRotate(node->left);
+            return rightRotate(node);
+        }
+
+        if (balance < -1 && getBalance(node->right) < -1)
+        {
+            return leftRotate(node);
+        }
+
+        if (balance < -1 && getBalance(node->right) > 1)
+        {
+            node->right = rightRotate(node->left);
+            return leftRotate(node);
+        }
+        return node;
+    }
 };
 
 void preOrder(Node *root)
@@ -114,13 +187,34 @@ int main()
     Node *root = nullptr;
     int n;
     cin >> n;
+    int arr[20];
     for (int i = 0; i < n; i++)
     {
-        int data;
-        cin >> data;
-        root = avl.insert(root, data);
+        cin >> arr[i];
     }
 
-    preOrder(root);
+    bool found = false;
+    int x;
+    cin >> x;
+    for (int i = 0; i < n; i++)
+    {
+        if (x == arr[i])
+        {
+            found = true;
+            break;
+        }
+    }
+
+    if (found)
+    {
+        for (int i = 0; i < n; i++)
+        {
+            root = avl.insert(root, arr[i]);
+        }
+        root = avl.deleteNode(root, x);
+        preOrder(root);
+    }
+    else
+        cout << "NUMBER NOT FOUND";
     return 0;
 }
