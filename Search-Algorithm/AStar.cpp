@@ -45,7 +45,7 @@ double distance(int x, int y, int newX, int newY)
     return sqrt(pow(x - newX, 2) + pow(y - newY, 2));
 }
 
-void tracePath(Point points[ROW][COL], Point dest)
+void traceBack(Point points[ROW][COL], Point dest)
 {
     stack<pair<int, int>> s;
     s.push(make_pair(dest.x, dest.y));
@@ -93,7 +93,7 @@ bool analyze(int oldX, int oldY, int newX, int newY, int myMap[ROW][COL], Point 
         cout << "trace back: => ";
         points[newY][newX].parentX = oldX;
         points[newY][newX].parentY = oldY;
-        tracePath(points, points[newY][newX]);
+        traceBack(points, points[newY][newX]);
         return true;
     }
 
@@ -139,9 +139,8 @@ void aStarSearch(int myMap[ROW][COL], Point src, Point dest)
     points[src.y][src.x].g = 0;
     points[src.y][src.x].h = 0;
 
-    set<Point, function<bool(Point, Point)>>
-        openList([](Point a, Point b)
-                 { return a.f <= b.f; });
+    set<Point, function<bool(Point, Point)>> openList([](Point a, Point b)
+                                                      { return a.f <= b.f; });
 
     openList.insert(points[src.y][src.x]);
 
