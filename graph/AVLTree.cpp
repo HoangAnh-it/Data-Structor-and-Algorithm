@@ -205,13 +205,14 @@ int main()
         }
     }
 
+    found = true;
     if (found)
     {
         for (int i = 0; i < n; i++)
         {
             root = avl.insert(root, arr[i]);
         }
-        root = avl.deleteNode(root, x);
+        // root = avl.deleteNode(root, x);
         preOrder(root);
     }
     else
